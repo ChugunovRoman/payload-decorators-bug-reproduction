@@ -1,42 +1,45 @@
-# Payload Blank Template
+# Payload decorators bug reproduction
 
-A blank template for [Payload](https://github.com/payloadcms/payload) to help you get up and running quickly. This repo may have been created by running `npx create-payload-app@latest` and selecting the "blank" template or by cloning this template on [Payload Cloud](https://payloadcms.com/new/clone/blank).
+1. Clone this repo
+2. npm i
+3. npm run build:payload
 
-See the official [Examples Directory](https://github.com/payloadcms/payload/tree/main/examples) for details on how to use Payload in a variety of different ways.
+And We got an error:
+```
+> payload-decorators-bug-reproduction@1.0.0 build:payload
+> cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload build
 
-## Development
+/home/ruut/Projects/payload-tests/decorators/node_modules/@swc/core/index.js:244
+            return bindings.transformSync(isModule ? JSON.stringify(src) : src, isModule, toBuffer(newOptions));
+                            ^
 
-To spin up the project locally, follow these steps:
+Error: 
+  × Expression expected
+   ╭─[/home/ruut/Projects/payload-tests/decorators/src/class.ts:1:1]
+ 1 │ import { DecoratorWithParam } from "./decorators";
+ 2 │ 
+ 3 │ @DecoratorWithParam("Expample param 1")
+   · ─
+ 4 │ export class Sum {
+ 5 │   constructor(private value1: number, private value2: number) {}
+ 6 │   public result(): number {
+   ╰────
 
-1. First clone the repo
-1. Then `cd YOUR_PROJECT_REPO && cp .env.example .env`
-1. Next `yarn && yarn dev` (or `docker-compose up`, see [Docker](#docker))
-1. Now `open http://localhost:3000/admin` to access the admin panel
-1. Create your first admin user using the form on the page
 
-That's it! Changes made in `./src` will be reflected in your app.
+Caused by:
+    Syntax Error
+    at Compiler.transformSync (/home/ruut/Projects/payload-tests/decorators/node_modules/@swc/core/index.js:244:29)
+    at Object.transformSync (/home/ruut/Projects/payload-tests/decorators/node_modules/@swc/core/index.js:351:21)
+    at compile (/home/ruut/Projects/payload-tests/decorators/node_modules/@swc/register/lib/node.js:76:22)
+    at compileHook (/home/ruut/Projects/payload-tests/decorators/node_modules/@swc/register/lib/node.js:91:16)
+    at Module._compile (/home/ruut/Projects/payload-tests/decorators/node_modules/pirates/lib/index.js:113:29)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.newLoader [as .ts] (/home/ruut/Projects/payload-tests/decorators/node_modules/pirates/lib/index.js:121:7)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) {
+  code: 'GenericFailure'
+}
 
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this project locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Production
-
-To run Payload in production, you need to build and serve the Admin panel. To do so, follow these steps:
-
-1. First invoke the `payload build` script by running `yarn build` or `npm run build` in your project root. This creates a `./build` directory with a production-ready admin bundle.
-1. Then run `yarn serve` or `npm run serve` to run Node in production and serve Payload from the `./build` directory.
-
-### Deployment
-
-The easiest way to deploy your project is to use [Payload Cloud](https://payloadcms.com/new/import), a one-click hosting solution to deploy production-ready instances of your Payload apps directly from your GitHub repo. You can also deploy your app manually, check out the [deployment documentation](https://payloadcms.com/docs/production/deployment) for full details.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+Node.js v20.11.1
+```
